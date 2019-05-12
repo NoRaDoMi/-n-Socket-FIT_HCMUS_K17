@@ -4,10 +4,12 @@
 #include "stdafx.h"
 #include <iostream>
 #include "DoAnSocket.h"
-#include "lib.h"
+//#include "lib.h"
+#include"ParseRequest.h"
 #include <string>
 /* Khai bao thu vien */
 #include "afxsock.h"
+#include<vector>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -67,7 +69,7 @@ int main(int argc, char* argv[])
 	int nRetCode = 0;
 
 	HMODULE hModule = ::GetModuleHandle(nullptr);
-
+	vector<char*> response;
 	if (hModule != nullptr)
 	{
 		// initialize MFC and print and error on failure
@@ -135,19 +137,21 @@ int main(int argc, char* argv[])
 					received += bytes;
 				} while (received < total);
 				/* process request */
-				printf("\nResquest:\n%s\n", request);
+				printf("\n=======REQUEST tu CLIENT (BROWSER):\n%s\n", request);
 
-				struct Request *req = parse_request(request);
-				struct Header *h;
+				struct httpRequest *req = parse_Request(request);
+				//struct Header *h;
 
 				if (req) {
 
-					printf("Method: %d\n", req->method);
-					printf("Request-URI: %s\n", req->url);
-					printf("HTTP-Version: %s\n", req->version);
-					puts("Headers:");
+					//printf("Method: %d\n", req->method);
+					printf("\n=== TEN HOST va REQUEST-URI :===\n");
+					printf("Request-URI: %s\n", req->request_uri);
+					printf("Host: %s\n", req->host);
+					//printf("HTTP-Version: %s\n", req->version);
+					//puts("Headers:");
 
-					for (h = req->headers; h; h = h->next) {
+					/*for (h = req->headers; h; h = h->next) {
 						printf("%32s: %s\n", h->name, h->value);
 						if (h->next == NULL)
 						{
@@ -157,86 +161,99 @@ int main(int argc, char* argv[])
 					}
 
 
-					puts("message-body:");
-					puts(req->body);
+					puts("message-body:");*/
+					//puts(req->body);
 
 
 				}
 
-				free_request(req);
-				// Gửi request lên server :D
-				////Buoc 2: Tao socket
-				//		CSocket s_client;
-				//		int tmpres;
-				//		char *ip;
-				//		char *get;
-				//		char buf[BUFSIZ + 1];
-				//		char *host;
-				//		char *page;
+				//free_request(req);
+				 //Gửi request lên server :D
+				//Buoc 2: Tao socket
+						CSocket s_client;
+						int tmpres;
+						char *ip;
+						char *get;
+						
+						char *buf;
+						//char *host;
+						//char *page;
 
-				//		/*if (argc == 1)
-				//		{
-				//			usage();
-				//			exit(2);
-				//		}
-				//		host = argv[1];
-				//		if (argc > 2)
-				//		{
-				//			page = argv[2];
-				//		}
-				//		else
-				//		{
-				//			page = PAGE;
-				//		}*/
+						/*if (argc == 1)
+						{
+							usage();
+							exit(2);
+						}
+						host = argv[1];
+						if (argc > 2)
+						{
+							page = argv[2];
+						}
+						else
+						{
+							page = PAGE;
+						}*/
 
-				//		s_client.Create();
+						s_client.Create();
 
-				//		//Buoc 3: Ket noi toi Server
-				//		ip = get_ip(host);
-				//		fprintf(stderr, "IP is %s\n", ip);
-				//		if (s_client.Connect(convertCharArrayToLPCWSTR(ip), PORT) < 0)
-				//		{
-				//			perror("Could not connect");
-				//			exit(1);
-				//		}
-				//		get = build_get_query(host, page);
-				//		fprintf(stderr, "Query is:\n<<START>>\n%s<<END>>\n", get);
-				//		/*
-				//		Stdin nó là bàn phím, standard input, nghĩa là thiết bị nhập liệu chuẩn. Tương tự
-				//		Stdout là màn hình
-				//		Stderr nó sẽ nối đến hệ thống ghi log để bạn có thể xem lại các lỗi hệ thống hoặc lỗi ứng dụng
-				//		*/
+						//Buoc 3: Ket noi toi Server
+						ip = get_ip(req->host);
+						fprintf(stderr, "\n====DIA CHI IP CUA HOST la %s\n", ip);
+						if (s_client.Connect(convertCharArrayToLPCWSTR(ip), PORT) < 0)
+						{
+							perror("Could not connect");
+							exit(1);
+						}
+						//get = build_get_query(req->host, req->request_uri);
+						get = (char*)malloc(BUFSIZ+1);
+						strcpy(get, request);
+						//fprintf(stderr, "\nQuery is:\n<<START>>\n%s<<END>>\n\n", get);
+						/*
+						Stdin nó là bàn phím, standard input, nghĩa là thiết bị nhập liệu chuẩn. Tương tự
+						Stdout là màn hình
+						Stderr nó sẽ nối đến hệ thống ghi log để bạn có thể xem lại các lỗi hệ thống hoặc lỗi ứng dụng
+						*/
 
-				//		//Send the query to the server
-				//		int sent = 0;
-				//		while (sent < strlen(get))
-				//		{
-				//			tmpres = s_client.Send(get + sent, strlen(get) - sent, 0);
-				//			if (tmpres == -1) {
-				//				perror("Can't send query");
-				//				exit(1);
-				//			}
-				//			sent += tmpres;
-				//		}
-				//		//now it is time to receive the page = /* receive the response */	
-				//		memset(buf, 0, sizeof(buf)); // char buf[BUFSIZ + 1];
-				//									 /*int htmlstart = 0;
-				//									 char * htmlcontent;*/
-				//		while ((tmpres = s_client.Receive(buf, BUFSIZ, 0)) > 0)
-				//		{
-				//			if (buf) {
-				//				fprintf(stdout, buf);
-				//			}
-				//			memset(buf, 0, tmpres);
-				//		}
-				//		if (tmpres < 0)
-				//		{
-				//			perror("Error receiving data");
-				//		}
-				//		
-				//		free(get);
-				//		free(ip);
-				//		s_client.Close();
+						//Send the query to the server
+						int sent = 0;
+						while (sent < strlen(get))
+						{
+							tmpres = s_client.Send(get + sent, strlen(get) - sent, 0);
+							if (tmpres == -1) {
+								perror("Can't send query");
+								exit(1);
+							}
+							sent += tmpres;
+						}
+
+						printf("\n========== REPONSE tu SERVER GOC: =============\n");
+						//now it is time to receive the page = /* receive the response */	
+						buf = new char[BUFSIZ + 1];
+						memset(buf, 0, sizeof(buf)); // char buf[BUFSIZ + 1];
+													 /*int htmlstart = 0;
+													 char * htmlcontent;*/
+						while ((tmpres = s_client.Receive(buf, BUFSIZ, 0)) > 0)
+						{
+							if (buf) {
+								fprintf(stdout, buf);
+								response.push_back(buf);
+								buf = new char[BUFSIZ + 1];
+								memset(buf, 0, sizeof(buf));
+							}
+							memset(buf, 0, tmpres);
+						}
+						if (tmpres < 0)
+						{
+							perror("Error receiving data");
+						}
+						
+						// Tra RESPONSE ve cho CLIENT (BROWSER):
+
+						free(get);
+						free(ip);
+						free(buf);
+						free_request(req);
+						s_client.Close();
 			}
 
 			connector.Close();
@@ -249,6 +266,28 @@ int main(int argc, char* argv[])
 		wprintf(L"Fatal Error: GetModuleHandle failed\n");
 		nRetCode = 1;
 	}
+	int i = 0;
+	int line = 1;
+	for (; i < 512; i++) {
+		if (response[0][i] == '\n')
+			line++;
+		if (line == 10)
+			break;
+	}
+
+	FILE * f;
+	fopen_s(&f, "abc.html", "wb");
+
+	for (; i < 512; i++) {
+		fwrite(&response[0][i], 1, 1, f);
+	}
+
+	cout << response.size() << endl;
+	for (int i = 1; i < response.size(); i++) {
+		fwrite(response[i], 1, 512, f);
+		delete[]response[i]; //Giải phóng vùng nhớ
+	}
+	fclose(f);
 	system("pause");
 	return nRetCode;
 }

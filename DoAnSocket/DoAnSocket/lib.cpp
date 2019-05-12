@@ -13,7 +13,9 @@ struct Request *parse_request(const char *raw) {
 	memset(req, 0, sizeof(struct Request));
 
 	// Method
-	size_t meth_len = strcspn(raw, " ");
+	size_t meth_len = strcspn(raw, " ");  // strcspn(s1,s2): quet trong chuoi s1 co su xuat hien dau tien cua 1 ki tu bat ki trong s2
+	// O day muon tim ki tu " " dau tien trong chuoi request = do dai cua method request
+	// memcmp(s1,s2,n): so sanh n byte dau cua chuoi s1 voi n byte dau cua chuoi s2
 	if (memcmp(raw, "GET", strlen("GET")) == 0) {
 		req->method = GET;
 	}
@@ -23,7 +25,8 @@ struct Request *parse_request(const char *raw) {
 	else {
 		req->method = UNSUPPORTED;
 	}
-	raw += meth_len + 1; // move past <SP>
+
+	raw += meth_len + 1; // di chuyen con tro den phan cua PAGE( Request-URI)
 
 						 // Request-URI
 	size_t url_len = strcspn(raw, " ");

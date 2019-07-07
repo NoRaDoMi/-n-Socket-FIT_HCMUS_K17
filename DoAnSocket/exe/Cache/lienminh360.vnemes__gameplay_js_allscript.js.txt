@@ -1,0 +1,37 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Sat, 15 Jun 2019 09:19:00 GMT
+Content-Type: application/javascript
+Content-Length: 478
+Last-Modified: Thu, 07 Apr 2016 04:13:39 GMT
+Connection: close
+ETag: "5705de73-1de"
+Accept-Ranges: bytes
+
+
+  
+/*
+ * sticky
+ */  
+
+$(window).load(function(){      
+	$('.sticky').scrollToFixed({
+		marginTop: $('header').outerHeight(true) + -120,
+		limit: function() {
+			var limit = $('footer').offset().top - $('.sticky').outerHeight(true) - 10;
+			return limit;
+		},
+		fixed: function() {  },
+		dontCheckForPositionFixedSupport: true
+	});
+  
+	/*
+	 * scroll
+	 */  	
+	$('.listheroes').slimScroll({
+		 width: 'auto',
+		 height: '325px',  
+		 color: '#666', 
+			railVisible: true
+	});
+});

@@ -1,0 +1,11 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Sat, 15 Jun 2019 09:19:00 GMT
+Content-Type: text/css
+Content-Length: 175
+Last-Modified: Thu, 07 Apr 2016 04:13:41 GMT
+Connection: close
+ETag: "5705de75-af"
+Accept-Ranges: bytes
+
+.malinky-ajax-pagination-loading{display:none;margin:15px 0;text-align:center}.malinky-ajax-pagination-loading img{width:50px;height:50px}.malinky-load-more{text-align:center}

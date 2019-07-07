@@ -1,7 +1,7 @@
 
 <img src="https://lh3.googleusercontent.com/xMjC1Qzg1OuyB2EbdFfkTriUPInVCcVv41YOn4eW0ClrvIWXDvu0pLgh-jswmm6UoqCg" width="800" height="200" />
 
-# ĐỒ ÁN CUỐI KÌ KIẾN TRÚC MÁY TÍNH K17
+# ĐỒ ÁN CUỐI MẠNG MÁY TÍNH K17
 ## Thực hiện: 
       1712126 - Võ Trọng Phúc
       1712148 - Hà Duy Tân
